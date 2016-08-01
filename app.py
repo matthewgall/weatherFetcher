@@ -35,8 +35,6 @@ def index():
 
 if __name__ == '__main__':
 
-	application = default_app()
-
 	# Initially get some data we need from the OS environment variables
 	serverHost = os.getenv('IP', 'localhost')
 	serverPort = os.getenv('PORT', '5000')
@@ -48,6 +46,11 @@ if __name__ == '__main__':
 	log.setLevel(logging.INFO)
 	log.addHandler(console)
 
-	# Now we're ready, so start the server
-	log.info("Successfully started application server")
-	application.run(host=serverHost, port=serverPort, quiet=True, server='cherrypy')       
+	if os.getenv('APP_MODE', 'web') is 'web':
+		application = default_app()
+
+		# Now we're ready, so start the server
+		log.info("Successfully started application server")
+		application.run(host=serverHost, port=serverPort, quiet=True, server='cherrypy')
+	else:
+		print index()       
